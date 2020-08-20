@@ -1,0 +1,5 @@
+#!/bin/bash
+# curl command to create a new polygon
+# note json is in the file fieldInput.json
+# for POST, this filename is specified in the code for now - one better approach would be to pass in the file name
+curl -X POST -H "Content-Type: application/json" http://localhost:8080/fields
