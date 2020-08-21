@@ -14,7 +14,7 @@ Development and most testing (though not enough) done in IntelliJ IDEA.
 
 <ins>Docker commands to build and run the API : </ins>
   
-  run  project directory - in this case /Users/alcurry/IdeaProjects/ydfdemo
+  run in project directory 
   
   ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=ac101/ydf-api
     
