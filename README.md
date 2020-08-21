@@ -10,7 +10,7 @@ Followup email questions and answers with Daniel Fernandes in this repo - email1
 
 Development and most testing (though not enough) done in IntelliJ IDEA.
 
-Docker commands to build and run the API :
+<ins>Docker commands to build and run the API : <ins>
   
   run  project directory - in this case /Users/alcurry/IdeaProjects/ydfdemo
   
