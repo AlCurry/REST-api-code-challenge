@@ -44,11 +44,12 @@ curl http://localhost:8080/fields/5f3e492c714b52b902e0e9f7/weather
 
 <ins> Code concerns :  </ins>
 
-   Many sections of the code are repetitive, I know this is not the best.   Ideally it would be made more modular so pieces are not mostly repeated for each Http Request Type - GET, POST, PUT, and DELETE and for pretty printing of JSON. 
-    Also generally concerned about the file structure, likely it is overly simplified.  In researching the problem much more elaborate, multi-file solutions were found - probably required for a more thorough solution.  This would include a java object mapping to the Field structure provided and a database for persistence.  
+Many sections of the code are repetitive, I know this is not the best.   Ideally it would be made more modular so pieces are not mostly repeated for each Http Request Type - GET, POST, PUT, and DELETE and for pretty printing of JSON. 
+    
+Also generally concerned about the file structure, likely it is overly simplified.  In researching the problem much more elaborate, multi-file solutions were found - probably required for a more thorough solution.  This would include a java object mapping to the Field structure provided and a database for persistence.  
 
 <ins> Other known issues : </ins>
 
-    For now the POST and PUT commands to create and update a Field include json that is in flat files, their names hard-coded in the .java code.  Far from optimal.  And produces a file not found error when running in docker, but works correctly in IntelliJ.   Probably better to pass a file name to the API that would include the JSON, or another approach. 
+For now the POST and PUT commands to create and update a Field include json that is in flat files, their names hard-coded in the .java code.  Far from optimal.  And produces a file not found error when running in docker, but works correctly in IntelliJ.   Probably better to pass a file name to the API that would include the JSON, or another approach. 
 
 Thank you for reading this far, apologies for so many disclaimers.  Some partially self-imposed time constraints were encountered.  If I could not resolve an issue within 30 or 60 minutes, between researching and implementing solutions, I accepted something that was working, in order to progress toward the finish line.  Part of the challenge was using many tools that I have limited experience with (docker, postman, the agromonitoring api, Intellij IDE, Java 11) and others that it has been more than 3 years since i studied or worked with (Spring Boot, Java in general).   In only a week working on this, my skills improved - after a bit more exposure to the specific tools, I believe they would continue to improve, especially with access to existing code, development standards, and professional expertise. 
