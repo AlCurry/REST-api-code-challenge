@@ -7,15 +7,13 @@ public class Field {
 
         private String id;
         private String name;
-        //private float price;
 
         public Field() {
         }
 
         public Field(String id, String name) {
             this.id = id;
-            this.name = name;
-            //this.price = price;
+            this.name = name;          
         }
 
         public Field(String id) {
@@ -27,9 +25,4 @@ public class Field {
         public String getName() {
             return name;
         }
-        /*public float getPrice() {
-            return price;
-        }*/
-
-        // other getters and setters...
 }
