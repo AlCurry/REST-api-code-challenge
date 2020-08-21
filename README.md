@@ -7,7 +7,7 @@ Full description of the challenge is in the file code_challenge.pdf in this repo
 
 <ins> Short version : <ins>
 
-develop a RESTful api to define Fields (as used for farming) and get weather information about them.  Use Java 11, Spring Boot, Docker.  
+Develop a RESTful api to define Fields (as used for farming) and get weather information about them.  Use Java 11, Spring Boot, Docker.  
 
 Followup email questions and answers with Daniel Fernandes in this repo - email18.08.2020.pdf.
 
