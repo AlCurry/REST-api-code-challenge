@@ -22,6 +22,7 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.Date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 @SpringBootApplication
 @RestController
@@ -54,7 +56,7 @@ public class ApiController {
 
     @PostMapping("/fields")
     public @ResponseBody
-    ResponseEntity<String> addField() {
+    ResponseEntity<?> addField() {
 
         System.out.println("Data in hard-coded json file for now");
 
@@ -259,27 +261,64 @@ public class ApiController {
         /*
             to get start and end dates  - requirement is for last seven days
             get current date in unix format
-            subtract seven days -- find a function for this, return unix format
-            possibly start with a standard format, subtract 7, convert both to unix
+            subtract seven days -  probably with a standard format, subtract 7, convert both to unix
         */
-        try {
-            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroAPIKey;
+        Date now = new Date();
+        long ut3 = now.getTime() / 1000L;
+        System.out.println("today's date : " + now + "   unix foramt : " + ut3);
+        Date dateBefore = new Date(now.getTime() - 7 * 24 * 3600 * 1000L ); // Subtract 7 days
+        long ut3sub7 = ut3 - 7 * 24 * 3600;
+        System.out.println("7 days ago   : " + dateBefore + "   unix foramt : " + ut3sub7);
 
+        try {
+            final String fullURL = "https://samples.openweathermap.org/agro/1.0/weather/history?polyid=" + id + "&start=" + ut3 + "&end=" + ut3sub7 +  "&appid=" + agroAPIKey;
+            // NOTE: this appid key is preceded by "&", while the other agromonitoring.com identifier is preceded by "?".
+            // The value of the appid key is the same.
+
+            System.out.println("fullURL = " + fullURL);
             HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(fullURL))
                     .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
                     .build();
 
-            // http://api.agromonitoring.com/agro/1.0/polygons/5f3a3123df8070000761076c?appid=76f93c352795168ce2274f98d37e4b33
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             // print status code
             System.out.println("http status : " + response.statusCode());
 
             // print response body
-            System.out.println(response.body());
+            ObjectMapper mapper = new ObjectMapper();
+            Object jsonObject = mapper.readValue(response.body(), Object.class);
 
-            return new ResponseEntity<String>("GET Response : " + id + "\n" + response.body() +"\n", HttpStatus.OK);
+            // From response.body, reformat the json output to match the requirements, eliminating some fields
+            // and putting the date timestamp in each section
+            /* it should look like this :
+                {
+                    "weather": [
+                            {
+                                "timestamp": "1485705600",
+                                "temperature": 288.15,
+                                "humidity": 85,
+                                "temperatureMax": 289.16,
+                                "temperatureMin": 280.16
+                            }, {
+                                "timestamp": "1485705700",
+                                "temperature": 288.15,
+                                "humidity": 85,
+                                "temperatureMax": 289.16,
+                                "temperatureMin": 280.16
+                            },
+                            ...
+                            ]
+                        }
 
+             */
+            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject));
+            //System.out.println(response.body());
+
+
+            //return new ResponseEntity<String>("GET Response : " + id + "\n" + response.body() +"\n", HttpStatus.OK);
+            return new ResponseEntity<String>("GET weather Response - field id : " + id + " status code : " + response.statusCode() + "\n" +
+                    mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject) +"\n", HttpStatus.OK);
 
         } catch (final IOException e) {
             e.printStackTrace();
