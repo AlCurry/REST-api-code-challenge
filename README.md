@@ -1,8 +1,7 @@
 # REST-api-code-challenge
 # Yara Digital Farming code challenge                                                                   
 
-#### Al Curry  
-#### August 20, 2020 
+#### Al Curry                                                  August 20, 2020 
 
 Full description of the challenge is in the file code_challenge.pdf in this repo.  
 
@@ -22,9 +21,13 @@ Docker commands to build and run the API :
 Curl commands for testing in repo file apiTestsCurl and below : 
 
 if not obvious, must be customized to data, changing polygon ids
+
 curl http://localhost:8080/fields/5f3a93c1714b52fc1de0e79a
+
 curl -X DELETE http://localhost:8080/fields/5f3ec3aa714b52079ee0eb06
+
 curl -X POST -H "Content-Type: application/json" http://localhost:8080/fields
+
 curl -X PUT -H "Content-Type: application/json" http://localhost:8080/fields/5f3e9170714b52b6c9e0ea29
 
 and
