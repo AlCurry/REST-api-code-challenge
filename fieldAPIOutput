@@ -1,0 +1,72 @@
+Script started on Fri Aug 21 11:53:10 2020
+[?1034halcurry$ cat apiq[KTestsCurl 
+#!/bin/bash
+# ydf api project - AC 21.08.2020
+# simple script of curl commands to show 
+# GET - retrieve 
+# DELETE - delete 
+# POST - create 
+# PUT - update 
+# if not obvious, must be customized to data, changing polygon ids
+curl http://localhost:8080/fields/5f3a93c1714b52fc1de0e79a
+curl -X DELETE http://localhost:8080/fields/5f3ec3aa714b52079ee0eb06
+curl -X POST -H "Content-Type: application/json" http://localhost:8080/fields
+curl -X PUT -H "Content-Type: application/json" http://localhost:8080/fields/5f3e9170714b52b6c9e0ea29
+
+alcurry$ ./apiTestsCurl 
+GET Response - field id : 5f3a93c1714b52fc1de0e79a
+{
+  "id" : "5f3a93c1714b52fc1de0e79a",
+  "geo_json" : {
+    "type" : "Feature",
+    "properties" : { },
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [ [ [ -121.1958, 37.6683 ], [ -121.1779, 37.6687 ], [ -121.1773, 37.6792 ], [ -121.1958, 37.6792 ], [ -121.1958, 37.6683 ] ] ]
+    }
+  },
+  "name" : "Polygonal",
+  "center" : [ -121.1867, 37.67385 ],
+  "area" : 190.9484,
+  "user_id" : "5f3a3123df80700007610769",
+  "created_at" : 1597674433
+}
+DELETE field id : 5f3ec3aa714b52079ee0eb06 status code : 204
+POST status code : 201
+Response : 
+{
+  "id" : "5f3f99a4714b528042e0ed5d",
+  "geo_json" : {
+    "type" : "Feature",
+    "properties" : { },
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [ [ [ -121.1958, 37.6683 ], [ -121.1779, 37.6687 ], [ -121.1773, 37.6792 ], [ -121.1958, 37.6792 ], [ -121.1958, 37.6683 ] ] ]
+    }
+  },
+  "name" : "Poly",
+  "center" : [ -121.1867, 37.67385 ],
+  "area" : 190.9484,
+  "user_id" : "5f3a3123df80700007610769",
+  "created_at" : 1598003620
+}
+PUT Response - field id : 5f3e9170714b52b6c9e0ea29 status code : 200
+{
+  "id" : "5f3e9170714b52b6c9e0ea29",
+  "geo_json" : {
+    "type" : "Feature",
+    "properties" : { },
+    "geometry" : {
+      "type" : "Polygon",
+      "coordinates" : [ [ [ -121.1958, 37.6683 ], [ -121.1779, 37.6687 ], [ -121.1773, 37.6792 ], [ -121.1958, 37.6792 ], [ -121.1958, 37.6683 ] ] ]
+    }
+  },
+  "name" : "Polynomial",
+  "center" : [ -121.1867, 37.67385 ],
+  "area" : 190.9484,
+  "user_id" : "5f3a3123df80700007610769",
+  "created_at" : 1597935984
+}
+alcurry$ exit
+
+Script done on Fri Aug 21 11:53:33 2020

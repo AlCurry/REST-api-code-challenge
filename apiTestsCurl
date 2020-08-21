@@ -1,0 +1,13 @@
+#!/bin/bash
+# ydf api project - AC 21.08.2020
+# simple script of curl commands to show 
+# GET - retrieve 
+# DELETE - delete 
+# POST - create 
+# PUT - update 
+# if not obvious, must be customized to data, changing polygon ids
+curl http://localhost:8080/fields/5f3a93c1714b52fc1de0e79a
+curl -X DELETE http://localhost:8080/fields/5f3ec3aa714b52079ee0eb06
+curl -X POST -H "Content-Type: application/json" http://localhost:8080/fields
+curl -X PUT -H "Content-Type: application/json" http://localhost:8080/fields/5f3e9170714b52b6c9e0ea29
+
