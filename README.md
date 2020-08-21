@@ -1,6 +1,7 @@
 ### Yara Digital Farming code challenge                                                                   
 
-#### Al Curry                August 20, 2020 
+#### Al Curry              
+#### August 20, 2020 
 
 Full description of the challenge is in the file code_challenge.pdf in this repo.  
 
