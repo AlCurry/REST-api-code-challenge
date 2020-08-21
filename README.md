@@ -11,11 +11,15 @@ Followup email questions and answers with Daniel Fernandes in this repo - email1
 Development and most testing (though not enough) done in IntelliJ IDEA.
 
 Docker commands to build and run the API :
+  
   run  project directory - in this case /Users/alcurry/IdeaProjects/ydfdemo
-   ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=ac101/ydf-api
-    docker run -p 8080:8080 -t ac101/ydf-api
-    # to store in docker hub : 
-    docker push ac101/ydf-api
+  
+  ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=ac101/ydf-api
+    
+  docker run -p 8080:8080 -t ac101/ydf-api
+    
+  to store in docker hub : 
+  docker push ac101/ydf-api
 
 Curl commands for testing in repo file apiTestsCurl and below : 
 
