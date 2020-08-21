@@ -4,13 +4,13 @@
 #### Al Curry  
 #### August 20, 2020 
 
-## Full description of the challenge is in the file code_challenge.pdf in this repo.  
+Full description of the challenge is in the file code_challenge.pdf in this repo.  
 
-## Short version : develop a RESTful api to define Fields (as used for farming) and get weather information about them.  Use Java 11, Spring Boot, Docker.  
+Short version : develop a RESTful api to define Fields (as used for farming) and get weather information about them.  Use Java 11, Spring Boot, Docker.  
 
-## Followup email questions and answers with Daniel Fernandes in this repo - email18.08.2020.pdf.
+Followup email questions and answers with Daniel Fernandes in this repo - email18.08.2020.pdf.
 
-## Development and most testing (though not enough) done in IntelliJ IDEA.
+Development and most testing (though not enough) done in IntelliJ IDEA.
 
 Docker commands to build and run the API :
   run  project directory - in this case /Users/alcurry/IdeaProjects/ydfdemo
@@ -21,7 +21,7 @@ Docker commands to build and run the API :
 
 Curl commands for testing in repo file apiTestsCurl and below : 
 
-# if not obvious, must be customized to data, changing polygon ids
+if not obvious, must be customized to data, changing polygon ids
 curl http://localhost:8080/fields/5f3a93c1714b52fc1de0e79a
 curl -X DELETE http://localhost:8080/fields/5f3ec3aa714b52079ee0eb06
 curl -X POST -H "Content-Type: application/json" http://localhost:8080/fields
