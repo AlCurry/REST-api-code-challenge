@@ -1,5 +1,4 @@
-# REST-api-code-challenge
-# Yara Digital Farming code challenge                                                                   
+### Yara Digital Farming code challenge                                                                   
 
 #### Al Curry                                                  August 20, 2020 
 
