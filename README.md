@@ -4,13 +4,14 @@
 
 #### August 26, 2020 
 ---
-Additonal work, improving code and function
+Additonal work, improving code and solving some problems.
 1. Removed hard-coded .json filenames, resolving docker issue for POST and PUT.
 1. Defined api.key in application.properties, rather than in java code.
 1. Implemented more thorough java object structure to match json for POST request / create function.
 1. Moved some code to UtilityFunctions.java
 1. Tested and added script for testing with HTTPie.
 1. Added comments 
+1. Gained some familiarity with IntelliJ's debugger and git tools.
 
 #### August 20, 2020 
 ---
