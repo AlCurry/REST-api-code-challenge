@@ -4,7 +4,7 @@
 
 #### August 26, 2020 
 ---
-Additonal work, improving code and solving some problems.
+<ins>Additonal work, improving code and solving some problems: </ins>
 1. Removed hard-coded .json filenames, resolving docker issue for POST and PUT.
 1. Defined api.key in application.properties, rather than in java code.
 1. Implemented more thorough java object structure to match json for POST request / create function.
