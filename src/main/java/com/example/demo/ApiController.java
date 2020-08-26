@@ -12,9 +12,7 @@
 package com.example.demo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,12 +26,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @SpringBootApplication
 @RestController
@@ -42,8 +36,6 @@ public class ApiController {
     public static void main(String[] args) {
         SpringApplication.run(ApiController.class, args);
     }
-
-
 
     private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1)
             .connectTimeout(Duration.ofSeconds(10)).build();
@@ -55,7 +47,7 @@ public class ApiController {
     public @ResponseBody
     ResponseEntity<?> addField(@RequestBody Field field ) {
 
-        System.out.println("POST begin ***");
+        System.out.println("POST request begins");
 
         try {
 
@@ -104,7 +96,7 @@ public class ApiController {
 
         System.out.println("field id value is : " + id);
 
-        System.out.println("GET begin ***");
+        System.out.println("GET request begins");
 
         try {
             final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroApiKey;
@@ -146,7 +138,7 @@ public class ApiController {
 
         System.out.println("field id value is : " + id);
 
-        System.out.println("DELETE begin ***");
+        System.out.println("DELETE request begins");
 
         try {
             final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroApiKey;
@@ -178,13 +170,20 @@ public class ApiController {
 
     }
 
+    /*
+         From agromonitoring.com API documentation, only name can be updated here -
+
+         "In order to update info for a polygon the id parameter should be used.
+         Currently there is only available to update name parameter, without changing polygon's area."
+
+     */
     @PutMapping("/fields/{id}")
     public @ResponseBody
     ResponseEntity<String> updateField(@RequestBody Field field, @PathVariable final String id) {
 
         System.out.println("field id value is : " + id);
         System.out.println("Field name, new value after update : " + field.getName());
-        System.out.println("PUT begin ***");
+        System.out.println("PUT request begins");
 
         try {
 
@@ -193,11 +192,9 @@ public class ApiController {
 
             final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroApiKey;
 
-            //String jsonFilename = "fieldUpdate.json";
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(fullURL))
                     .header("Content-Type", "application/json")
-                    //.PUT(BodyPublishers.ofFile(Paths.get(jsonFilename)))
                     .PUT(BodyPublishers.ofString(reqBodyStr))
                     .build();
 
@@ -259,6 +256,7 @@ public class ApiController {
         Date dateBefore = new Date(now.getTime() - 7 * 24 * 3600 * 1000L ); // Subtract 7 days
         long ut3sub7 = ut3 - 7 * 24 * 3600;
         System.out.println("7 days ago   : " + dateBefore + "   unix foramt : " + ut3sub7);
+        System.out.println("GET request, weather by field id and date range, begins");
 
         try {
             final String fullURL = "https://samples.openweathermap.org/agro/1.0/weather/history?polyid=" + id + "&start=" + ut3sub7 + "&end=" + ut3 +  "&appid=" + agroApiKey;
