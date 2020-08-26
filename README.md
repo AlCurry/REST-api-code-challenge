@@ -1,6 +1,17 @@
 ### Yara Digital Farming code challenge                                                                   
 
-#### Al Curry              
+#### Al Curry  
+
+#### August 26, 2020 
+---
+Additonal work, improving code and function
+1. Removed hard-coded .json filenames, resolving docker issue for POST and PUT.
+1. Defined api.key in application.properties, rather than in java code.
+1. Implemented more thorough java object structure to match json for POST request / create function.
+1. Moved some code to UtilityFunctions.java
+1. Tested and added script for testing with HTTPie.
+1. Added comments 
+
 #### August 20, 2020 
 ---
 Full description of the challenge is in the file code_challenge.pdf in this repo.  
