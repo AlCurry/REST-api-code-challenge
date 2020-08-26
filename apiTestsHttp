@@ -1,0 +1,14 @@
+#!/bin/bash
+# ydf api project - AC 25.08.2020
+# simple script of http commands to show 
+# tests very similar to curl, but using http utility
+#     details at httpie.org if needed 
+# GET - retrieve 
+# DELETE - delete 
+# POST - create 
+# PUT - update 
+# if not obvious, must be customized to data, changing polygon ids
+http GET localhost:8080/fields/5f3a93c1714b52fc1de0e79a
+http DELETE localhost:8080/fields/5f451fb6714b5256dfe0f3dc
+http POST http://localhost:8080/fields < fieldInput.json
+http PUT http://localhost:8080/fields/5f461348714b5223ade0f68c < fieldUpdate.json
