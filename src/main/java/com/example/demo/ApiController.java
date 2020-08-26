@@ -83,10 +83,11 @@ public class ApiController {
             ie.printStackTrace();
         }
 
-        // return below seems required, without it a compiler error occurs, yet in testing
-        // so far code does not get to this point - investigate later, time permitting
-        System.out.println("to return 1");
-        return new ResponseEntity<String>(HttpStatus.OK);
+        // return below required, based on a bit of research
+        // in testing, it is never called
+        // originally returned status ok, but concluded if we get here, things are not OK,
+        // BAD_REQUEST seemed more logical
+        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -126,9 +127,8 @@ public class ApiController {
             ie.printStackTrace();
         }
 
-        // return below seems required, without it a compiler error occurs, yet in testing
-        // so far code does not get to this point - investigate later, time permitting
-        return new ResponseEntity<String>(HttpStatus.OK);
+        // see comment above, approx. line 86
+        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -164,9 +164,8 @@ public class ApiController {
             ie.printStackTrace();
         }
 
-        // return below seems required, without it a compiler error occurs, yet in testing
-        // so far code does not get to this point - investigate later, time permitting
-        return new ResponseEntity<String>(HttpStatus.OK);
+        // see comment above, approx. line 86
+        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -221,10 +220,8 @@ public class ApiController {
             ie.printStackTrace();
         }
 
-        // return below seems required, without it a compiler error occurs, yet in testing
-        // so far code does not get to this point - investigate later, time permitting
-        return new ResponseEntity<String>(HttpStatus.OK);
-
+        // see comment above, approx. line 86
+        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/fields/{id}/weather")
@@ -303,11 +300,8 @@ public class ApiController {
             ie.printStackTrace();
         }
 
-        // return below seems required, without it a compiler error occurs, yet in testing
-        // so far code does not get to this point - investigate later, time permitting
-        System.out.println("to return 2");
-        return new ResponseEntity<String>(HttpStatus.OK);
-
+        // see comment above, approx. line 86
+        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
     }
 
 }
