@@ -11,35 +11,29 @@
 
 package com.example.demo;
 
-import java.lang.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
-import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Date;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.multipart.MultipartFile;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @RestController
@@ -49,30 +43,32 @@ public class ApiController {
         SpringApplication.run(ApiController.class, args);
     }
 
+
+
     private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1)
             .connectTimeout(Duration.ofSeconds(10)).build();
 
-    final String agroAPIKey = "76f93c352795168ce2274f98d37e4b33";
+    @Value("${api.key}")
+    private String agroApiKey;
 
     @PostMapping("/fields")
     public @ResponseBody
-    ResponseEntity<?> addField() {
-
-        System.out.println("Data in hard-coded json file for now");
+    ResponseEntity<?> addField(@RequestBody Field field ) {
 
         System.out.println("POST begin ***");
 
         try {
 
-            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons" + "?appid=" + agroAPIKey;
-            System.out.println("fullURL : " + fullURL);
+            var objectMapper = new ObjectMapper();
+            String reqBodyStr = objectMapper.writeValueAsString(field);
 
-            String jsonFilename = "fieldInput.json";
+            reqBodyStr = UtilityFunctions.addSquareBrackets(reqBodyStr);
+
+            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons" + "?appid=" + agroApiKey;
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(fullURL))
                     .header("Content-Type", "application/json")
-                    //.POST(ofInputStream(() -> getClass().getResourceAsStream("/some-data.json")))
-                    .POST(BodyPublishers.ofFile(Paths.get(jsonFilename)))
+                    .POST(BodyPublishers.ofString(reqBodyStr))
                     .build();
 
             // http://api.agromonitoring.com/agro/1.0/polygons/5f3a3123df8070000761076c?appid=76f93c352795168ce2274f98d37e4b33
@@ -81,15 +77,10 @@ public class ApiController {
             // print status code
             System.out.println("http status : " + response.statusCode());
 
-            // print response body
-            //System.out.println(response.body());
-
             ObjectMapper mapper = new ObjectMapper();
             Object jsonObject = mapper.readValue(response.body(), Object.class);
 
             System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject));
-
-            //return new ResponseEntity<String>("PUT Response : " + id + "\n" + response.body() +"\n", HttpStatus.OK);
 
             return new ResponseEntity<String>("POST status code : " + response.statusCode() + "\nResponse : " + "\n" +
                     mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject) +"\n", HttpStatus.OK);
@@ -99,7 +90,6 @@ public class ApiController {
         } catch (final InterruptedException ie) {
             ie.printStackTrace();
         }
-
 
         // return below seems required, without it a compiler error occurs, yet in testing
         // so far code does not get to this point - investigate later, time permitting
@@ -117,7 +107,7 @@ public class ApiController {
         System.out.println("GET begin ***");
 
         try {
-            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroAPIKey;
+            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroApiKey;
 
             HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(fullURL))
                     .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
@@ -128,9 +118,6 @@ public class ApiController {
 
             // print status code
             System.out.println("http status : " + response.statusCode());
-
-            // print response body
-            //System.out.println(response.body());
 
             ObjectMapper mapper = new ObjectMapper();
             Object jsonObject = mapper.readValue(response.body(), Object.class);
@@ -162,7 +149,7 @@ public class ApiController {
         System.out.println("DELETE begin ***");
 
         try {
-            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroAPIKey;
+            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroApiKey;
 
             HttpRequest request = HttpRequest.newBuilder().DELETE().uri(URI.create(fullURL))
                     .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
@@ -193,22 +180,25 @@ public class ApiController {
 
     @PutMapping("/fields/{id}")
     public @ResponseBody
-    ResponseEntity<String> updateField(@PathVariable final String id) {
+    ResponseEntity<String> updateField(@RequestBody Field field, @PathVariable final String id) {
 
         System.out.println("field id value is : " + id);
-        System.out.println("Data in hard-coded json file for now");
-
+        System.out.println("Field name, new value after update : " + field.getName());
         System.out.println("PUT begin ***");
 
         try {
 
-            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroAPIKey;
+            var objectMapper = new ObjectMapper();
+            String reqBodyStr = objectMapper.writeValueAsString(field);
 
-            String jsonFilename = "fieldUpdate.json";
+            final String fullURL = "http://api.agromonitoring.com/agro/1.0/polygons/" + id + "?appid=" + agroApiKey;
+
+            //String jsonFilename = "fieldUpdate.json";
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(fullURL))
                     .header("Content-Type", "application/json")
-                    .PUT(BodyPublishers.ofFile(Paths.get(jsonFilename)))
+                    //.PUT(BodyPublishers.ofFile(Paths.get(jsonFilename)))
+                    .PUT(BodyPublishers.ofString(reqBodyStr))
                     .build();
 
             // http://api.agromonitoring.com/agro/1.0/polygons/5f3a3123df8070000761076c?appid=76f93c352795168ce2274f98d37e4b33
@@ -242,11 +232,9 @@ public class ApiController {
 
     @GetMapping("/fields/{id}/weather")
     public @ResponseBody
-    ResponseEntity<String> getWeatherByFieldId(@PathVariable final String id) {
+    ResponseEntity<String> getWeatherByFieldId(@PathVariable final String id) throws Exception {
 
         System.out.println("Weather field id is : " + id);
-
-        System.out.println("GET begin ***");
 
         /*
         URL format to get weather -- agromonitoring.com api - format from Daniel's email
@@ -259,10 +247,12 @@ public class ApiController {
         */
 
         /*
-            to get start and end dates  - requirement is for last seven days
+            to get start and end dates  - requirement is for "last seven days"
+            assumed to mean today and the previous 7 days
             get current date in unix format
             subtract seven days -  probably with a standard format, subtract 7, convert both to unix
         */
+
         Date now = new Date();
         long ut3 = now.getTime() / 1000L;
         System.out.println("today's date : " + now + "   unix foramt : " + ut3);
@@ -271,11 +261,17 @@ public class ApiController {
         System.out.println("7 days ago   : " + dateBefore + "   unix foramt : " + ut3sub7);
 
         try {
-            final String fullURL = "https://samples.openweathermap.org/agro/1.0/weather/history?polyid=" + id + "&start=" + ut3 + "&end=" + ut3sub7 +  "&appid=" + agroAPIKey;
-            // NOTE: this appid key is preceded by "&", while the other agromonitoring.com identifier is preceded by "?".
-            // The value of the appid key is the same.
+            final String fullURL = "https://samples.openweathermap.org/agro/1.0/weather/history?polyid=" + id + "&start=" + ut3sub7 + "&end=" + ut3 +  "&appid=" + agroApiKey;
 
-            System.out.println("fullURL = " + fullURL);
+            /* NOTE: this appid key is preceded by "&", while the other agromonitoring.com identifier is preceded by "?".
+               The value of the appid key is the same.
+
+               DATE RANGE issues - in my testing on with the IDE, the samples openweathermap web page, and with
+               postman, the start and end dates don't appear work.  To me it looks like the output is always
+               for 8 times from 1485702000 to 1485727200, January 29 2017, from 3 pm to 10 pm, without regard to
+               the start and end date values passed in.
+            */
+
             HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(fullURL))
                     .setHeader("User-Agent", "Java 11 HttpClient Bot") // add request header
                     .build();
@@ -289,36 +285,19 @@ public class ApiController {
             ObjectMapper mapper = new ObjectMapper();
             Object jsonObject = mapper.readValue(response.body(), Object.class);
 
-            // From response.body, reformat the json output to match the requirements, eliminating some fields
-            // and putting the date timestamp in each section
-            /* it should look like this :
-                {
-                    "weather": [
-                            {
-                                "timestamp": "1485705600",
-                                "temperature": 288.15,
-                                "humidity": 85,
-                                "temperatureMax": 289.16,
-                                "temperatureMin": 280.16
-                            }, {
-                                "timestamp": "1485705700",
-                                "temperature": 288.15,
-                                "humidity": 85,
-                                "temperatureMax": 289.16,
-                                "temperatureMin": 280.16
-                            },
-                            ...
-                            ]
-                        }
+            JSONObject requiredFieldsJSON = new JSONObject();
 
-             */
+            requiredFieldsJSON = UtilityFunctions.reformatWeatherJSON(response.body());
+
+            //System.out.println(requiredFieldsJSON.toJSONString());
+
+            System.out.println("Results from openweathermap:");
             System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject));
-            //System.out.println(response.body());
+            System.out.println("Reformatted by this API:");
+            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(requiredFieldsJSON));
 
-
-            //return new ResponseEntity<String>("GET Response : " + id + "\n" + response.body() +"\n", HttpStatus.OK);
             return new ResponseEntity<String>("GET weather Response - field id : " + id + " status code : " + response.statusCode() + "\n" +
-                    mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject) +"\n", HttpStatus.OK);
+                    mapper.writerWithDefaultPrettyPrinter().writeValueAsString(requiredFieldsJSON) +"\n", HttpStatus.OK);
 
         } catch (final IOException e) {
             e.printStackTrace();
